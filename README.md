@@ -1,134 +1,67 @@
 # Loan Approval Prediction System
 
-A Machine Learning based Loan Approval Prediction System built using Flask, HTML, CSS, JavaScript, and Scikit-learn.
+A Flask web app that predicts a loan application's outcome from applicant details and provides a credit score based bank match for supported loan products.
+
+## Current UI
+
+![LoanPredict AI current landing page](screenshots/current-ui.png)
 
 ## Features
 
-- Predicts whether a loan application will be Approved or Rejected
-- Beautiful responsive UI
-- Real-time prediction using Machine Learning
-- Confidence score display
-- Home-loan bank matches based on published credit-score criteria
-- Form validation
-- Flask backend
+- Loan approval prediction with model confidence when available.
+- Interactive applicant form with completion progress and example applicant presets.
+- Credit score meter with a simple score range indicator.
+- Live EMI, total repayment, and interest estimates. The default illustrative rate is 9%; users can adjust it from 5% to 25%.
+- Home loan bank matches based on published credit score rules.
+- Responsive layout and inline form validation.
+- Collateral value is no longer requested. The backend supplies zero for this model input to preserve compatibility with the saved model.
+- Footer contact links currently contain sample values (`hello@example.com` and `+91 00000 00000`); replace them with real contact details before publishing.
 
-## Tech Stack
+## Bank credit score matching
 
-- Python
-- Flask
-- Scikit-learn
-- Random Forest Classifier
-- HTML
-- CSS
-- JavaScript
+The bank count is a score screen only, not an approval or complete eligibility assessment. Current home loan rules are:
 
-## Bank credit-score matching
+| Bank | Published score rule used by this app |
+| --- | --- |
+| State Bank of India (SBI) | Scores below 550 are ineligible for the published home loan policy. |
+| Punjab National Bank (PNB) | The housing loan FAQ says no minimum CIC score is prescribed. |
 
-After a prediction, the result card shows the count of banks whose published
-credit-score screen matches the applicant's score for a home loan. The current
-rules are based on SBI's published home-loan score bands (scores below 550 are
-not eligible) and PNB's housing-loan FAQ (no minimum CIC score prescribed).
-Each bank entry links to its source. For car, education, and personal loans the
-app reports that it has no verified rules yet; it does not reuse home-loan
-criteria for another product.
+The app links to each bank's official source in the prediction result. For car, education, and personal loans, it reports that no verified bank score rules are configured rather than reusing home loan rules. Bank terms can change; confirm criteria with the lender before applying.
 
-This is a credit-score screen only. It is not an approval, and each lender also
-checks income, repayment capacity, documents, product terms, and other factors.
-Bank rules can change, so check the linked bank page before applying.
+## Tech stack
 
-## Machine Learning
+- Python 3.11, Flask, and scikit-learn
+- HTML, CSS, and JavaScript
+- Saved model, scaler, and one-hot encoder in `model/`
 
-Model Used:
-- Random Forest Classifier
-
-Performance:
-
-- Accuracy: 90%
-- Precision: 82.5%
-- Recall: 85.2%
-- F1 Score: 83.9%
-
-## Project Structure
-
-```
-Loan-Approval-Prediction-System/
-│
-├── app.py
-├── requirements.txt
-├── README.md
-│
-├── dataset/
-├── model/
-├── notebook/
-├── static/
-│   ├── style.css
-│   └── script.js
-│
-└── templates/
-    └── index.html
-```
-
-## Screenshots
-
-### Home
-![Home](screenshots/Home.png)
-
-### Prediction Form
-![Prediction Form](screenshots/Prediction-form.png)
-
-### Loan Approved
-![Loan Approved](screenshots/Loan-Approved.png)
-
-### Loan Rejected
-![Loan Rejected](screenshots/Loan-Reject.png)
-
-### About
-![About](screenshots/About.png)
-
-## Installation
-
-Clone the repository
+## Run locally
 
 ```bash
-git clone https://github.com/adarsh-jayswal/Loan-Approval-Prediction-System.git
-```
-
-Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-Run the application
-
-```bash
+python -m pip install -r requirements.txt
 python app.py
 ```
 
-Open
+Open [http://127.0.0.1:5000](http://127.0.0.1:5000). The health endpoint is available at `/health`.
 
+## Project structure
+
+```text
+app.py                 Flask API and prediction pipeline
+dataset/               Loan approval training dataset
+model/                 Saved model and preprocessing artifacts
+notebook/              Model exploration and training notebook
+screenshots/           Application screenshots
+static/                CSS and JavaScript
+templates/             Flask HTML template
 ```
-http://127.0.0.1:5000
+
+## Model artifact compatibility
+
+The checked-in model artifacts report that they were saved with scikit-learn 1.6.1, while `requirements.txt` currently pins 1.5.1. Loading them with the pinned version can produce an `InconsistentVersionWarning`; use a matching scikit-learn version when regenerating or validating the model artifacts.
+
 ## Deployment
 
-### Deploying to Render / Heroku / Railway
-
-1. Push your repository to GitHub.
-2. Create a new **Web Service** on Render/Heroku/Railway connected to your GitHub repository.
-3. Configure settings:
-   - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `gunicorn app:app`
-   - **Python Version**: Python 3.11.x (configured via `runtime.txt`)
-4. Set Environment Variables (Optional):
-   - `PORT`: (automatically set by hosting platform)
-   - `FLASK_DEBUG`: `False`
-   - `CORS_ORIGINS`: `*`
-
-### Running with Production WSGI Server (Gunicorn)
-
-```bash
-gunicorn app:app
-```
+The repository includes a `Procfile` for a WSGI deployment using Gunicorn. Configure the hosting platform to install `requirements.txt` and run `gunicorn app:app`.
 
 ## License
 

@@ -57,11 +57,11 @@ templates/             Flask HTML template
 
 ## Model artifact compatibility
 
-The checked-in model artifacts report that they were saved with scikit-learn 1.6.1, while `requirements.txt` currently pins 1.5.1. Loading them with the pinned version can produce an `InconsistentVersionWarning`; use a matching scikit-learn version when regenerating or validating the model artifacts.
+The checked-in model artifacts were saved with scikit-learn 1.6.1, and `requirements.txt` pins that matching version.
 
 ## Deployment
 
-The repository includes a `Procfile` for a WSGI deployment using Gunicorn. Configure the hosting platform to install `requirements.txt` and run `gunicorn app:app`.
+The repository includes a `Procfile` for a WSGI deployment using Gunicorn and a `.python-version` file selecting Python 3.11.9. On Render, create a Python web service for the `main` branch with build command `pip install -r requirements.txt` and start command `gunicorn app:app`. The checked-in model files and dependencies are included in the repository.
 
 ## License
 
